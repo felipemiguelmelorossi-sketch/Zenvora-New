@@ -1,1 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
 
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Crie sua conta Zenvora."
+    >
+
+    <title>Criar conta — Zenvora</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="auth-page register-page">
+
+    <div class="auth-bg"></div>
+
+    <a
+        href="index.html"
+        class="auth-logo"
+    >
+        ZENVORA
+    </a>
+
+
+    <main class="register-layout">
+
+        <section class="register-copy">
+
+            <div class="auth-badge">
+                COMECE SUA JORNADA
+            </div>
+
+
+            <h1>
+                Seu próximo
+                <br>
+                <span>descobrimento</span>
+                começa aqui.
+            </h1>
+
+
+            <p>
+                Crie sua conta e diga para a Zenvora
+                o que você gosta. Depois, deixe a
+                plataforma fazer o resto.
+            </p>
+
+
+            <div class="benefit-list">
+
+                <div>
+                    <b>✦</b>
+
+                    <span>
+                        Recomendações personalizadas
+                    </span>
+                </div>
+
+
+                <div>
+                    <b>✦</b>
+
+                    <span>
+                        Salve descobertas para depois
+                    </span>
+                </div>
+
+
+                <div>
+                    <b>✦</b>
+
+                    <span>
+                        Feed baseado nos seus interesses
+                    </span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="auth-card register-card">
+
+            <h2>
+                Criar sua conta
+            </h2>
+
+
+            <p class="muted">
+                É rápido e você pode começar agora.
+            </p>
+
+
+            <form id="registerForm">
+
+                <label>
+                    Nome
+
+                    <input
+                        id="registerName"
+                        type="text"
+                        placeholder="Seu nome"
+                        required
+                        autocomplete="name"
+                    >
+                </label>
+
+
+                <label>
+                    E-mail
+
+                    <input
+                        id="registerEmail"
+                        type="email"
+                        placeholder="voce@email.com"
+                        required
+                        autocomplete="email"
+                    >
+                </label>
+
+
+                <label>
+                    Senha
+
+                    <div class="password-wrap">
+
+                        <input
+                            id="registerPassword"
+                            type="password"
+                            placeholder="Mínimo de 6 caracteres"
+                            required
+                            minlength="6"
+                            autocomplete="new-password"
+                        >
+
+                        <button
+                            type="button"
+                            data-toggle="#registerPassword"
+                        >
+                            Mostrar
+                        </button>
+
+                    </div>
+                </label>
+
+
+                <label>
+                    Confirmar senha
+
+                    <div class="password-wrap">
+
+                        <input
+                            id="registerConfirm"
+                            type="password"
+                            placeholder="Digite novamente"
+                            required
+                            minlength="6"
+                            autocomplete="new-password"
+                        >
+
+                        <button
+                            type="button"
+                            data-toggle="#registerConfirm"
+                        >
+                            Mostrar
+                        </button>
+
+                    </div>
+                </label>
+
+
+                <label class="check-row">
+
+                    <input
+                        id="terms"
+                        type="checkbox"
+                        required
+                    >
+
+                    <span>
+                        Concordo com os termos de uso
+                        da Zenvora.
+                    </span>
+
+                </label>
+
+
+                <button
+                    class="btn btn-primary btn-full"
+                    type="submit"
+                >
+                    Criar conta
+                    <span>→</span>
+                </button>
+
+
+                <div
+                    id="formMessage"
+                    class="form-message"
+                ></div>
+
+            </form>
+
+
+            <p class="auth-bottom">
+
+                Já possui uma conta?
+
+                <a href="login.html">
+                    Entrar
+                </a>
+
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
