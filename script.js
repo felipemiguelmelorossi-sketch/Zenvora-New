@@ -195,14 +195,18 @@
 
             return JSON.parse(value);
 
-        } catch {
+        } catch (error) {
+            console.error("Erro ao ler armazenamento:", error);
             return fallback;
         }
     }
 
 
     function setStorage(key, value) {
-        localStorage.setItem(key, JSON.stringify(value));
+        localStorage.setItem(
+            key,
+            JSON.stringify(value)
+        );
     }
 
 
@@ -212,34 +216,57 @@
 
 
     function getUser() {
-        return getStorage(STORAGE.user, null);
+        return getStorage(
+            STORAGE.user,
+            null
+        );
     }
 
 
     function getPreferences() {
-        return getStorage(STORAGE.preferences, []);
+        return getStorage(
+            STORAGE.preferences,
+            []
+        );
     }
 
 
     function getSaved() {
-        return getStorage(STORAGE.saved, []);
+        return getStorage(
+            STORAGE.saved,
+            []
+        );
     }
 
 
     function setMessage(message, type = "error") {
-        const element = $("#formMessage");
+
+        const element =
+            $("#formMessage");
 
         if (!element) {
             return;
         }
 
         element.textContent = message;
-        element.className = `form-message ${type}`;
+
+        element.className =
+            `form-message ${type}`;
     }
 
 
     function encodePassword(password) {
-        return btoa(unescape(encodeURIComponent(password)));
+
+        try {
+            return btoa(
+                unescape(
+                    encodeURIComponent(password)
+                )
+            );
+
+        } catch {
+            return btoa(password);
+        }
     }
 
 
@@ -248,39 +275,72 @@
     ========================================= */
 
     function setupLogin() {
-        const form = $("#loginForm");
+
+        const form =
+            $("#loginForm");
 
         if (!form) {
             return;
         }
 
-        form.addEventListener("submit", (event) => {
-            event.preventDefault();
 
-            const email = $("#loginEmail").value.trim().toLowerCase();
-            const password = $("#loginPassword").value;
+        form.addEventListener(
+            "submit",
+            (event) => {
 
-            const user = getUser();
+                event.preventDefault();
 
-            if (!user) {
-                setMessage(
-                    "Nenhuma conta encontrada neste navegador. Crie uma conta primeiro."
-                );
-                return;
+
+                const email =
+                    $("#loginEmail")
+                        ?.value
+                        .trim()
+                        .toLowerCase();
+
+
+                const password =
+                    $("#loginPassword")
+                        ?.value || "";
+
+
+                const user =
+                    getUser();
+
+
+                if (!user) {
+
+                    setMessage(
+                        "Nenhuma conta encontrada. Crie uma conta primeiro."
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    user.email !== email ||
+                    user.password !== encodePassword(password)
+                ) {
+
+                    setMessage(
+                        "E-mail ou senha incorretos."
+                    );
+
+                    return;
+                }
+
+
+                /*
+                 * IMPORTANTE:
+                 * Não apagamos o usuário.
+                 * Apenas entramos no app.
+                 */
+
+                window.location.href =
+                    "app.html";
+
             }
-
-            if (user.email !== email) {
-                setMessage("E-mail ou senha incorretos.");
-                return;
-            }
-
-            if (user.password !== encodePassword(password)) {
-                setMessage("E-mail ou senha incorretos.");
-                return;
-            }
-
-            window.location.href = "app.html";
-        });
+        );
     }
 
 
@@ -289,78 +349,201 @@
     ========================================= */
 
     function setupRegister() {
-        const form = $("#registerForm");
+
+        const form =
+            $("#registerForm");
 
         if (!form) {
             return;
         }
 
-        form.addEventListener("submit", (event) => {
-            event.preventDefault();
 
-            const name = $("#registerName").value.trim();
-            const email = $("#registerEmail").value.trim().toLowerCase();
-            const password = $("#registerPassword").value;
-            const confirm = $("#registerConfirm").value;
+        form.addEventListener(
+            "submit",
+            (event) => {
 
-            if (name.length < 2) {
-                setMessage("Digite seu nome.");
-                return;
+                event.preventDefault();
+
+
+                const name =
+                    $("#registerName")
+                        ?.value
+                        .trim();
+
+
+                const email =
+                    $("#registerEmail")
+                        ?.value
+                        .trim()
+                        .toLowerCase();
+
+
+                const password =
+                    $("#registerPassword")
+                        ?.value || "";
+
+
+                const confirm =
+                    $("#registerConfirm")
+                        ?.value || "";
+
+
+                if (!name || name.length < 2) {
+
+                    setMessage(
+                        "Digite seu nome."
+                    );
+
+                    return;
+                }
+
+
+                if (!email) {
+
+                    setMessage(
+                        "Digite seu e-mail."
+                    );
+
+                    return;
+                }
+
+
+                if (password.length < 6) {
+
+                    setMessage(
+                        "A senha precisa ter pelo menos 6 caracteres."
+                    );
+
+                    return;
+                }
+
+
+                if (password !== confirm) {
+
+                    setMessage(
+                        "As senhas não são iguais."
+                    );
+
+                    return;
+                }
+
+
+                const existingUser =
+                    getUser();
+
+
+                /*
+                 * Se já existe uma conta com o mesmo
+                 * e-mail, não sobrescreve silenciosamente.
+                 */
+
+                if (
+                    existingUser &&
+                    existingUser.email === email
+                ) {
+
+                    setMessage(
+                        "Esse e-mail já possui uma conta. Entre pelo Login."
+                    );
+
+                    return;
+                }
+
+
+                const user = {
+
+                    name: name,
+
+                    email: email,
+
+                    password:
+                        encodePassword(password)
+
+                };
+
+
+                setStorage(
+                    STORAGE.user,
+                    user
+                );
+
+
+                setStorage(
+                    STORAGE.preferences,
+                    []
+                );
+
+
+                setStorage(
+                    STORAGE.saved,
+                    []
+                );
+
+
+                setStorage(
+                    STORAGE.onboarding,
+                    true
+                );
+
+
+                window.location.href =
+                    "interesses.html";
+
             }
-
-            if (password.length < 6) {
-                setMessage("A senha precisa ter pelo menos 6 caracteres.");
-                return;
-            }
-
-            if (password !== confirm) {
-                setMessage("As senhas não são iguais.");
-                return;
-            }
-
-            const user = {
-                name,
-                email,
-                password: encodePassword(password)
-            };
-
-            setStorage(STORAGE.user, user);
-            setStorage(STORAGE.preferences, []);
-            setStorage(STORAGE.saved, []);
-            setStorage(STORAGE.onboarding, true);
-
-            window.location.href = "interesses.html";
-        });
+        );
     }
 
 
     /* =========================================
-       MOSTRAR SENHA
+       MOSTRAR / OCULTAR SENHA
     ========================================= */
 
     function setupPasswordToggles() {
-        $$("[data-toggle]").forEach((button) => {
 
-            button.addEventListener("click", () => {
+        $$("[data-toggle]").forEach(
+            (button) => {
 
-                const selector = button.dataset.toggle;
-                const input = $(selector);
+                button.addEventListener(
+                    "click",
+                    () => {
 
-                if (!input) {
-                    return;
-                }
+                        const selector =
+                            button.dataset.toggle;
 
-                if (input.type === "password") {
-                    input.type = "text";
-                    button.textContent = "Ocultar";
-                } else {
-                    input.type = "password";
-                    button.textContent = "Mostrar";
-                }
 
-            });
+                        const input =
+                            $(selector);
 
-        });
+
+                        if (!input) {
+                            return;
+                        }
+
+
+                        if (
+                            input.type === "password"
+                        ) {
+
+                            input.type = "text";
+
+                            button.textContent =
+                                "Ocultar";
+
+                        } else {
+
+                            input.type =
+                                "password";
+
+                            button.textContent =
+                                "Mostrar";
+
+                        }
+
+                    }
+                );
+
+            }
+        );
     }
 
 
@@ -369,79 +552,121 @@
     ========================================= */
 
     function setupInterests() {
-        const grid = $("#interestGrid");
-        const finishButton = $("#finishInterests");
-        const countElement = $("#interestCount");
+
+        const grid =
+            $("#interestGrid");
+
+        const finishButton =
+            $("#finishInterests");
+
+        const countElement =
+            $("#interestCount");
+
 
         if (!grid || !finishButton) {
             return;
         }
 
-        const selected = new Set(getPreferences());
+
+        const selected =
+            new Set(
+                getPreferences()
+            );
 
 
         function updateUI() {
 
-            $$(".interest-card", grid).forEach((card) => {
+            $$(".interest-card", grid)
+                .forEach((card) => {
 
-                const interest = card.dataset.interest;
+                    const interest =
+                        card.dataset.interest;
 
-                card.classList.toggle(
-                    "selected",
-                    selected.has(interest)
+
+                    card.classList.toggle(
+                        "selected",
+                        selected.has(interest)
+                    );
+
+                });
+
+
+            if (countElement) {
+
+                countElement.textContent =
+                    `${selected.size} selecionados`;
+
+            }
+
+
+            finishButton.disabled =
+                selected.size < 3;
+
+        }
+
+
+        $$(".interest-card", grid)
+            .forEach((card) => {
+
+                card.addEventListener(
+                    "click",
+                    () => {
+
+                        const interest =
+                            card.dataset.interest;
+
+
+                        if (
+                            selected.has(interest)
+                        ) {
+
+                            selected.delete(
+                                interest
+                            );
+
+                        } else {
+
+                            selected.add(
+                                interest
+                            );
+
+                        }
+
+
+                        updateUI();
+
+                    }
                 );
 
             });
 
 
-            if (countElement) {
-                countElement.textContent =
-                    `${selected.size} selecionados`;
-            }
+        finishButton.addEventListener(
+            "click",
+            () => {
 
-
-            finishButton.disabled = selected.size < 3;
-        }
-
-
-        $$(".interest-card", grid).forEach((card) => {
-
-            card.addEventListener("click", () => {
-
-                const interest = card.dataset.interest;
-
-                if (selected.has(interest)) {
-                    selected.delete(interest);
-                } else {
-                    selected.add(interest);
+                if (selected.size < 3) {
+                    return;
                 }
 
-                updateUI();
 
-            });
+                setStorage(
+                    STORAGE.preferences,
+                    [...selected]
+                );
 
-        });
+
+                setStorage(
+                    STORAGE.onboarding,
+                    false
+                );
 
 
-        finishButton.addEventListener("click", () => {
+                window.location.href =
+                    "app.html";
 
-            if (selected.size < 3) {
-                return;
             }
-
-            setStorage(
-                STORAGE.preferences,
-                [...selected]
-            );
-
-            setStorage(
-                STORAGE.onboarding,
-                false
-            );
-
-            window.location.href = "app.html";
-
-        });
+        );
 
 
         updateUI();
@@ -449,55 +674,104 @@
 
 
     /* =========================================
-       MATCH
+       SCORE
     ========================================= */
 
     function getScore(item) {
 
-        const preferences = getPreferences();
+        const preferences =
+            getPreferences();
+
 
         if (!preferences.length) {
             return item.score;
         }
 
-        if (preferences.includes(item.category)) {
-            return Math.min(item.score + 4, 99);
+
+        if (
+            preferences.includes(
+                item.category
+            )
+        ) {
+
+            return Math.min(
+                item.score + 4,
+                99
+            );
+
         }
 
-        return Math.max(item.score - 5, 70);
+
+        return Math.max(
+            item.score - 5,
+            70
+        );
     }
 
 
-    function getRecommendations(category = "Todos", search = "") {
+    /* =========================================
+       RECOMENDAÇÕES
+    ========================================= */
 
-        let items = [...DISCOVERIES];
+    function getRecommendations(
+        category = "Todos",
+        search = ""
+    ) {
+
+        let items =
+            [...DISCOVERIES];
 
 
         if (category !== "Todos") {
-            items = items.filter(
-                item => item.category === category
-            );
+
+            items =
+                items.filter(
+                    item =>
+                        item.category === category
+                );
+
         }
 
 
         if (search) {
 
-            const query = search.toLowerCase();
+            const query =
+                search.toLowerCase();
 
-            items = items.filter(item => {
 
-                return (
-                    item.title.toLowerCase().includes(query) ||
-                    item.description.toLowerCase().includes(query) ||
-                    item.category.toLowerCase().includes(query)
+            items =
+                items.filter(
+                    item => {
+
+                        return (
+
+                            item.title
+                                .toLowerCase()
+                                .includes(query)
+
+                            ||
+
+                            item.description
+                                .toLowerCase()
+                                .includes(query)
+
+                            ||
+
+                            item.category
+                                .toLowerCase()
+                                .includes(query)
+
+                        );
+
+                    }
                 );
-
-            });
         }
 
 
         items.sort(
-            (a, b) => getScore(b) - getScore(a)
+            (a, b) =>
+                getScore(b) -
+                getScore(a)
         );
 
 
@@ -511,15 +785,28 @@
 
     function createDiscoveryCard(item) {
 
-        const saved = getSaved();
-        const isSaved = saved.includes(item.id);
-        const score = getScore(item);
+        const saved =
+            getSaved();
 
-        const card = document.createElement("article");
 
-        card.className = "discovery-item";
+        const isSaved =
+            saved.includes(item.id);
+
+
+        const score =
+            getScore(item);
+
+
+        const card =
+            document.createElement("article");
+
+
+        card.className =
+            "discovery-item";
+
 
         card.innerHTML = `
+
             <div class="discovery-icon">
                 ${item.icon}
             </div>
@@ -558,6 +845,7 @@
             </div>
         `;
 
+
         return card;
     }
 
@@ -576,10 +864,13 @@
             return;
         }
 
-        const items = getRecommendations(
-            category,
-            search
-        );
+
+        const items =
+            getRecommendations(
+                category,
+                search
+            );
+
 
         container.innerHTML = "";
 
@@ -587,7 +878,9 @@
         if (!items.length) {
 
             container.innerHTML = `
+
                 <div class="empty-state">
+
                     <div>⌕</div>
 
                     <h3>
@@ -597,28 +890,34 @@
                     <p>
                         Tente outra categoria ou pesquisa.
                     </p>
+
                 </div>
+
             `;
 
             return;
         }
 
 
-        items.forEach(item => {
+        items.forEach(
+            item => {
 
-            container.appendChild(
-                createDiscoveryCard(item)
-            );
+                container.appendChild(
+                    createDiscoveryCard(item)
+                );
 
-        });
+            }
+        );
     }
 
 
     function renderHome() {
+
         renderDiscovery(
             $("#discoveryGrid"),
             "Todos"
         );
+
     }
 
 
@@ -626,85 +925,110 @@
         category = "Todos",
         search = ""
     ) {
+
         renderDiscovery(
             $("#discoverGrid"),
             category,
             search
         );
+
     }
 
 
     /* =========================================
-       SALVAR
+       SALVOS
     ========================================= */
 
     function setupSaveButtons() {
 
-        document.addEventListener("click", (event) => {
+        document.addEventListener(
+            "click",
+            (event) => {
 
-            const button =
-                event.target.closest("[data-save-id]");
-
-            if (!button) {
-                return;
-            }
-
-            const id = button.dataset.saveId;
-
-            let saved = getSaved();
+                const button =
+                    event.target.closest(
+                        "[data-save-id]"
+                    );
 
 
-            if (saved.includes(id)) {
+                if (!button) {
+                    return;
+                }
 
-                saved = saved.filter(
-                    savedId => savedId !== id
+
+                const id =
+                    button.dataset.saveId;
+
+
+                let saved =
+                    getSaved();
+
+
+                if (
+                    saved.includes(id)
+                ) {
+
+                    saved =
+                        saved.filter(
+                            savedId =>
+                                savedId !== id
+                        );
+
+                } else {
+
+                    saved.push(id);
+
+                }
+
+
+                setStorage(
+                    STORAGE.saved,
+                    saved
                 );
 
-            } else {
 
-                saved.push(id);
+                button.classList.toggle(
+                    "saved",
+                    saved.includes(id)
+                );
+
+
+                button.textContent =
+                    saved.includes(id)
+                        ? "♥"
+                        : "♡";
+
+
+                renderSaved();
 
             }
-
-
-            setStorage(
-                STORAGE.saved,
-                saved
-            );
-
-
-            button.classList.toggle(
-                "saved",
-                saved.includes(id)
-            );
-
-
-            button.textContent =
-                saved.includes(id)
-                    ? "♥"
-                    : "♡";
-
-
-            renderSaved();
-
-        });
+        );
     }
 
 
     function renderSaved() {
 
-        const grid = $("#savedGrid");
-        const empty = $("#savedEmpty");
+        const grid =
+            $("#savedGrid");
+
+        const empty =
+            $("#savedEmpty");
+
 
         if (!grid) {
             return;
         }
 
-        const savedIds = getSaved();
 
-        const items = DISCOVERIES.filter(
-            item => savedIds.includes(item.id)
-        );
+        const savedIds =
+            getSaved();
+
+
+        const items =
+            DISCOVERIES.filter(
+                item =>
+                    savedIds.includes(item.id)
+            );
 
 
         grid.innerHTML = "";
@@ -713,7 +1037,8 @@
         if (!items.length) {
 
             if (empty) {
-                empty.style.display = "block";
+                empty.style.display =
+                    "block";
             }
 
             return;
@@ -721,17 +1046,20 @@
 
 
         if (empty) {
-            empty.style.display = "none";
+            empty.style.display =
+                "none";
         }
 
 
-        items.forEach(item => {
+        items.forEach(
+            item => {
 
-            grid.appendChild(
-                createDiscoveryCard(item)
-            );
+                grid.appendChild(
+                    createDiscoveryCard(item)
+                );
 
-        });
+            }
+        );
     }
 
 
@@ -741,55 +1069,75 @@
 
     function setupCategories() {
 
-        $$(".category-row").forEach(row => {
+        $$(".category-row")
+            .forEach((row) => {
 
-            $$(".category-button", row).forEach(button => {
+                $$(".category-button", row)
+                    .forEach((button) => {
 
-                button.addEventListener("click", () => {
+                        button.addEventListener(
+                            "click",
+                            () => {
 
-                    const category =
-                        button.dataset.category;
-
-
-                    // Atualiza o botão ativo
-                    $$(".category-button", row).forEach(
-                        item => item.classList.remove("active")
-                    );
-
-                    button.classList.add("active");
+                                const category =
+                                    button.dataset.category;
 
 
-                    // Se for a primeira linha,
-                    // filtra a página inicial.
-                    if (row.id === "categoryRow") {
+                                $$(".category-button", row)
+                                    .forEach(
+                                        item =>
+                                            item.classList
+                                                .remove(
+                                                    "active"
+                                                )
+                                    );
 
-                        renderDiscovery(
-                            $("#discoveryGrid"),
-                            category
+
+                                button.classList.add(
+                                    "active"
+                                );
+
+
+                                if (
+                                    row.id ===
+                                    "categoryRow"
+                                ) {
+
+                                    renderDiscovery(
+                                        $("#discoveryGrid"),
+                                        category
+                                    );
+
+                                    return;
+                                }
+
+
+                                if (
+                                    row.id ===
+                                    "categoryRow2"
+                                ) {
+
+                                    const search =
+                                        $("#searchInput")
+                                            ? $("#searchInput")
+                                                .value
+                                                .trim()
+                                            : "";
+
+
+                                    renderDiscover(
+                                        category,
+                                        search
+                                    );
+
+                                }
+
+                            }
                         );
 
-                        return;
-                    }
-
-
-                    // Se for a segunda linha,
-                    // filtra a página Descobrir.
-                    if (row.id === "categoryRow2") {
-
-                        renderDiscover(
-                            category,
-                            $("#searchInput")
-                                ? $("#searchInput").value.trim()
-                                : ""
-                        );
-
-                    }
-
-                });
+                    });
 
             });
-
-        });
     }
 
 
@@ -797,86 +1145,115 @@
        NAVEGAÇÃO
     ========================================= */
 
-    function showSection(sectionName) {
+    function showSection(
+        sectionName
+    ) {
 
-        $$(".app-section").forEach(section => {
-
-            section.classList.add(
-                "hidden-section"
+        $$(".app-section")
+            .forEach(
+                section =>
+                    section.classList.add(
+                        "hidden-section"
+                    )
             );
-
-        });
 
 
         const section =
             $(`#section-${sectionName}`);
 
+
         if (section) {
+
             section.classList.remove(
                 "hidden-section"
             );
+
         }
 
 
-        $$(".side-link[data-section]").forEach(link => {
+        $$(".side-link[data-section]")
+            .forEach((link) => {
 
-            link.classList.toggle(
-                "active",
-                link.dataset.section === sectionName
-            );
+                link.classList.toggle(
+                    "active",
+                    link.dataset.section ===
+                    sectionName
+                );
 
-        });
+            });
 
 
-        if (sectionName === "saved") {
+        if (
+            sectionName === "saved"
+        ) {
+
             renderSaved();
+
         }
 
 
-        if (sectionName === "discover") {
+        if (
+            sectionName === "discover"
+        ) {
+
             renderDiscover();
-        }
 
+        }
     }
 
 
     function setupNavigation() {
 
-        $$(".side-link[data-section]").forEach(link => {
+        $$(".side-link[data-section]")
+            .forEach((link) => {
 
-            link.addEventListener("click", () => {
+                link.addEventListener(
+                    "click",
+                    () => {
 
-                showSection(
-                    link.dataset.section
+                        showSection(
+                            link.dataset.section
+                        );
+
+                    }
                 );
 
             });
 
-        });
 
+        $$("[data-go]")
+            .forEach((button) => {
 
-        $$("[data-go]").forEach(button => {
+                button.addEventListener(
+                    "click",
+                    () => {
 
-            button.addEventListener("click", () => {
+                        showSection(
+                            button.dataset.go
+                        );
 
-                showSection(
-                    button.dataset.go
+                    }
                 );
 
             });
 
-        });
 
+        const seeAll =
+            $("#seeAllBtn");
 
-        const seeAll = $("#seeAllBtn");
 
         if (seeAll) {
 
-            seeAll.addEventListener("click", () => {
+            seeAll.addEventListener(
+                "click",
+                () => {
 
-                showSection("discover");
+                    showSection(
+                        "discover"
+                    );
 
-            });
+                }
+            );
 
         }
 
@@ -884,17 +1261,21 @@
         const featuredButton =
             $("#featuredBtn");
 
+
         if (featuredButton) {
 
             featuredButton.addEventListener(
                 "click",
                 () => {
-                    showSection("discover");
+
+                    showSection(
+                        "discover"
+                    );
+
                 }
             );
 
         }
-
     }
 
 
@@ -904,36 +1285,43 @@
 
     function setupSearch() {
 
-        const input = $("#searchInput");
+        const input =
+            $("#searchInput");
+
 
         if (!input) {
             return;
         }
 
 
-        input.addEventListener("input", () => {
+        input.addEventListener(
+            "input",
+            () => {
 
-            const query =
-                input.value.trim();
+                const query =
+                    input.value.trim();
 
 
-            if (query) {
+                if (query) {
 
-                showSection("discover");
+                    showSection(
+                        "discover"
+                    );
 
-                renderDiscover(
-                    "Todos",
-                    query
-                );
 
-            } else {
+                    renderDiscover(
+                        "Todos",
+                        query
+                    );
 
-                renderDiscover();
+                } else {
+
+                    renderDiscover();
+
+                }
 
             }
-
-        });
-
+        );
     }
 
 
@@ -943,7 +1331,9 @@
 
     function setupProfile() {
 
-        const user = getUser();
+        const user =
+            getUser();
+
 
         if (!user) {
             return;
@@ -959,75 +1349,112 @@
         const welcome =
             $("#welcomeName");
 
+
         if (welcome) {
-            welcome.textContent = firstName;
+
+            welcome.textContent =
+                firstName;
+
         }
 
 
         const topName =
             $("#topUserName");
 
+
         if (topName) {
-            topName.textContent = firstName;
+
+            topName.textContent =
+                firstName;
+
         }
 
 
         const profileName =
             $("#profileName");
 
+
         if (profileName) {
-            profileName.textContent = user.name;
+
+            profileName.textContent =
+                user.name;
+
         }
 
 
         const profileEmail =
             $("#profileEmail");
 
+
         if (profileEmail) {
-            profileEmail.textContent = user.email;
+
+            profileEmail.textContent =
+                user.email;
+
         }
 
 
         const avatar =
             $("#avatar");
 
+
         if (avatar) {
+
             avatar.textContent =
-                firstName.charAt(0).toUpperCase();
+                firstName
+                    .charAt(0)
+                    .toUpperCase();
+
         }
 
 
         const profileAvatar =
             $("#profileAvatar");
 
+
         if (profileAvatar) {
+
             profileAvatar.textContent =
-                firstName.charAt(0).toUpperCase();
+                firstName
+                    .charAt(0)
+                    .toUpperCase();
+
         }
 
 
         const interests =
             $("#profileInterests");
 
+
         if (interests) {
 
             interests.innerHTML = "";
 
-            getPreferences().forEach(interest => {
 
-                const chip =
-                    document.createElement("span");
+            getPreferences()
+                .forEach((interest) => {
 
-                chip.className = "chip";
+                    const chip =
+                        document.createElement(
+                            "span"
+                        );
 
-                chip.textContent = interest;
 
-                interests.appendChild(chip);
+                    chip.className =
+                        "chip";
 
-            });
+
+                    chip.textContent =
+                        interest;
+
+
+                    interests.appendChild(
+                        chip
+                    );
+
+                });
 
         }
-
     }
 
 
@@ -1037,25 +1464,33 @@
 
     function setupLogout() {
 
-        const button = $("#logoutBtn");
+        const button =
+            $("#logoutBtn");
+
 
         if (!button) {
             return;
         }
 
 
-        button.addEventListener("click", () => {
+        button.addEventListener(
+            "click",
+            () => {
 
-            removeStorage(STORAGE.user);
-            removeStorage(STORAGE.preferences);
-            removeStorage(STORAGE.saved);
-            removeStorage(STORAGE.onboarding);
+                /*
+                 * NÃO APAGAMOS A CONTA.
+                 *
+                 * Apenas saímos do app.
+                 *
+                 * Assim o usuário pode fazer
+                 * login novamente depois.
+                 */
 
-            window.location.href =
-                "index.html";
+                window.location.href =
+                    "login.html";
 
-        });
-
+            }
+        );
     }
 
 
@@ -1065,12 +1500,18 @@
 
     function protectApp() {
 
-        if (!document.body.classList.contains("app-page")) {
-            return;
+        if (
+            !document.body.classList
+                .contains("app-page")
+        ) {
+
+            return true;
         }
 
 
-        const user = getUser();
+        const user =
+            getUser();
+
 
         if (!user) {
 
