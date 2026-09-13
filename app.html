@@ -1,1 +1,527 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
 
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Zenvora — seu espaço personalizado de descoberta."
+    >
+
+    <title>Zenvora — Descobrir</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="app-page">
+
+    <aside class="sidebar">
+
+        <a
+            class="app-logo"
+            href="app.html"
+        >
+            ZENVORA
+        </a>
+
+
+        <nav>
+
+            <button
+                class="side-link active"
+                data-section="home"
+                type="button"
+            >
+                <span>⌂</span>
+                <span>Início</span>
+            </button>
+
+
+            <button
+                class="side-link"
+                data-section="discover"
+                type="button"
+            >
+                <span>✦</span>
+                <span>Descobrir</span>
+            </button>
+
+
+            <button
+                class="side-link"
+                data-section="saved"
+                type="button"
+            >
+                <span>♡</span>
+                <span>Salvos</span>
+            </button>
+
+
+            <button
+                class="side-link"
+                data-section="profile"
+                type="button"
+            >
+                <span>◎</span>
+                <span>Perfil</span>
+            </button>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                id="logoutBtn"
+                class="side-link"
+                type="button"
+            >
+                <span>↪</span>
+                <span>Sair</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <main class="app-content">
+
+        <header class="app-topbar">
+
+            <div class="mobile-brand">
+                ZENVORA
+            </div>
+
+
+            <div class="search-box">
+
+                <span>⌕</span>
+
+                <input
+                    id="searchInput"
+                    type="search"
+                    placeholder="Pesquisar descobertas..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div class="user-mini">
+
+                <span id="topUserName">
+                    Você
+                </span>
+
+                <div
+                    id="avatar"
+                    class="avatar"
+                >
+                    Z
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- INÍCIO -->
+
+        <section
+            id="section-home"
+            class="app-section"
+        >
+
+            <div class="welcome-row">
+
+                <div>
+
+                    <span class="eyebrow">
+                        SEU ESPAÇO DE DESCOBERTA
+                    </span>
+
+                    <h1>
+                        Olá,
+                        <span id="welcomeName">
+                            explorador
+                        </span>.
+                    </h1>
+
+                    <p>
+                        Encontramos algumas coisas
+                        que podem combinar com você.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="featured-card">
+
+                <div>
+
+                    <span class="featured-label">
+                        DESTAQUE PARA VOCÊ
+                    </span>
+
+                    <h2 id="featuredTitle">
+                        Ferramentas de IA para explorar
+                    </h2>
+
+                    <p id="featuredDescription">
+                        Descubra novas formas de criar,
+                        pesquisar e trabalhar com tecnologia.
+                    </p>
+
+                    <button
+                        class="btn btn-primary"
+                        id="featuredBtn"
+                        type="button"
+                    >
+                        Explorar descoberta →
+                    </button>
+
+                </div>
+
+
+                <div class="featured-orb">
+
+                    <span id="featuredScore">
+                        96%
+                    </span>
+
+                    <small>
+                        match
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="category-row"
+                id="categoryRow"
+            >
+
+                <button
+                    class="category-button active"
+                    data-category="Todos"
+                    type="button"
+                >
+                    Todos
+                </button>
+
+                <button
+                    class="category-button"
+                    data-category="Tecnologia"
+                    type="button"
+                >
+                    Tecnologia
+                </button>
+
+                <button
+                    class="category-button"
+                    data-category="Games"
+                    type="button"
+                >
+                    Games
+                </button>
+
+                <button
+                    class="category-button"
+                    data-category="Música"
+                    type="button"
+                >
+                    Música
+                </button>
+
+                <button
+                    class="category-button"
+                    data-category="Moda"
+                    type="button"
+                >
+                    Moda
+                </button>
+
+                <button
+                    class="category-button"
+                    data-category="Negócios"
+                    type="button"
+                >
+                    Negócios
+                </button>
+
+            </div>
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="eyebrow">
+                        PARA VOCÊ
+                    </span>
+
+                    <h2>
+                        Descobertas selecionadas
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="seeAllBtn"
+                    class="text-button"
+                    type="button"
+                >
+                    Ver todas →
+                </button>
+
+            </div>
+
+
+            <div
+                class="discovery-grid"
+                id="discoveryGrid"
+            ></div>
+
+        </section>
+
+
+        <!-- DESCOBRIR -->
+
+        <section
+            id="section-discover"
+            class="app-section hidden-section"
+        >
+
+            <div class="page-heading">
+
+                <span class="eyebrow">
+                    EXPLORAR
+                </span>
+
+                <h1>
+                    Descubra mais.
+                </h1>
+
+                <p>
+                    Pesquise e encontre novas possibilidades.
+                </p>
+
+            </div>
+
+
+            <div
+                class="category-row"
+                id="categoryRow2"
+            >
+
+                <button
+                    class="category-button active"
+                    data-category="Todos"
+                    type="button"
+                >
+                    Todos
+                </button>
+
+                <button
+                    class="category-button"
+                    data-category="Tecnologia"
+                    type="button"
+                >
+                    Tecnologia
+                </button>
+
+                <button
+                    class="category-button"
+                    data-category="Games"
+                    type="button"
+                >
+                    Games
+                </button>
+
+                <button
+                    class="category-button"
+                    data-category="Música"
+                    type="button"
+                >
+                    Música
+                </button>
+
+                <button
+                    class="category-button"
+                    data-category="Moda"
+                    type="button"
+                >
+                    Moda
+                </button>
+
+                <button
+                    class="category-button"
+                    data-category="Negócios"
+                    type="button"
+                >
+                    Negócios
+                </button>
+
+            </div>
+
+
+            <div
+                class="discovery-grid"
+                id="discoverGrid"
+            ></div>
+
+        </section>
+
+
+        <!-- SALVOS -->
+
+        <section
+            id="section-saved"
+            class="app-section hidden-section"
+        >
+
+            <div class="page-heading">
+
+                <span class="eyebrow">
+                    SUA COLEÇÃO
+                </span>
+
+                <h1>
+                    Meus salvos.
+                </h1>
+
+                <p>
+                    As descobertas que você decidiu guardar.
+                </p>
+
+            </div>
+
+
+            <div
+                class="discovery-grid"
+                id="savedGrid"
+            ></div>
+
+
+            <div
+                id="savedEmpty"
+                class="empty-state"
+            >
+
+                <div>
+                    ♡
+                </div>
+
+                <h3>
+                    Nada salvo ainda.
+                </h3>
+
+                <p>
+                    Quando encontrar algo interessante,
+                    clique no coração para guardar aqui.
+                </p>
+
+                <button
+                    class="btn btn-primary"
+                    data-go="discover"
+                    type="button"
+                >
+                    Descobrir agora →
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- PERFIL -->
+
+        <section
+            id="section-profile"
+            class="app-section hidden-section"
+        >
+
+            <div class="page-heading">
+
+                <span class="eyebrow">
+                    SUA CONTA
+                </span>
+
+                <h1>
+                    Seu perfil.
+                </h1>
+
+                <p>
+                    Veja seus dados e interesses.
+                </p>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <div
+                    id="profileAvatar"
+                    class="profile-avatar"
+                >
+                    Z
+                </div>
+
+
+                <div>
+
+                    <h2 id="profileName">
+                        Usuário
+                    </h2>
+
+                    <p id="profileEmail">
+                        email
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <div>
+
+                    <span class="eyebrow">
+                        SEUS INTERESSES
+                    </span>
+
+                    <h2>
+                        O que você gosta
+                    </h2>
+
+
+                    <div
+                        id="profileInterests"
+                        class="chips"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
