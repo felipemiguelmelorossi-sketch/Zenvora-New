@@ -1,1 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
 
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Escolha seus interesses na Zenvora."
+    >
+
+    <title>Seus interesses — Zenvora</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="interests-page">
+
+    <header class="simple-header">
+
+        <a
+            class="auth-logo"
+            href="index.html"
+        >
+            ZENVORA
+        </a>
+
+        <span>
+            Personalização 1/1
+        </span>
+
+    </header>
+
+
+    <main class="interests-main">
+
+        <div class="auth-badge">
+            PERSONALIZE SUA ZENVORA
+        </div>
+
+
+        <h1>
+            O que faz você
+            <span>clicar?</span>
+        </h1>
+
+
+        <p>
+            Escolha pelo menos 3 interesses.
+            Vamos usar isso para montar suas
+            primeiras recomendações.
+        </p>
+
+
+        <div
+            class="interest-grid"
+            id="interestGrid"
+        >
+
+            <button
+                class="interest-card"
+                data-interest="Tecnologia"
+                type="button"
+            >
+                <b>⌘</b>
+                <strong>Tecnologia</strong>
+                <small>IA, apps e inovação</small>
+            </button>
+
+
+            <button
+                class="interest-card"
+                data-interest="Games"
+                type="button"
+            >
+                <b>◈</b>
+                <strong>Games</strong>
+                <small>Jogos e experiências</small>
+            </button>
+
+
+            <button
+                class="interest-card"
+                data-interest="Música"
+                type="button"
+            >
+                <b>♫</b>
+                <strong>Música</strong>
+                <small>Artistas e sons</small>
+            </button>
+
+
+            <button
+                class="interest-card"
+                data-interest="Moda"
+                type="button"
+            >
+                <b>◇</b>
+                <strong>Moda</strong>
+                <small>Estilo e tendências</small>
+            </button>
+
+
+            <button
+                class="interest-card"
+                data-interest="Negócios"
+                type="button"
+            >
+                <b>↗</b>
+                <strong>Negócios</strong>
+                <small>Ideias e oportunidades</small>
+            </button>
+
+
+            <button
+                class="interest-card"
+                data-interest="Criatividade"
+                type="button"
+            >
+                <b>✦</b>
+                <strong>Criatividade</strong>
+                <small>Design e criação</small>
+            </button>
+
+
+            <button
+                class="interest-card"
+                data-interest="Esportes"
+                type="button"
+            >
+                <b>◎</b>
+                <strong>Esportes</strong>
+                <small>Atletas e competições</small>
+            </button>
+
+
+            <button
+                class="interest-card"
+                data-interest="Filmes"
+                type="button"
+            >
+                <b>▶</b>
+                <strong>Filmes & Séries</strong>
+                <small>Entretenimento</small>
+            </button>
+
+
+            <button
+                class="interest-card"
+                data-interest="Educação"
+                type="button"
+            >
+                <b>⌁</b>
+                <strong>Educação</strong>
+                <small>Aprendizado</small>
+            </button>
+
+
+            <button
+                class="interest-card"
+                data-interest="Programação"
+                type="button"
+            >
+                <b>&lt;/&gt;</b>
+                <strong>Programação</strong>
+                <small>Código e tecnologia</small>
+            </button>
+
+
+            <button
+                class="interest-card"
+                data-interest="Finanças"
+                type="button"
+            >
+                <b>$</b>
+                <strong>Finanças</strong>
+                <small>Dinheiro e mercado</small>
+            </button>
+
+
+            <button
+                class="interest-card"
+                data-interest="Entretenimento"
+                type="button"
+            >
+                <b>★</b>
+                <strong>Entretenimento</strong>
+                <small>Novidades e cultura</small>
+            </button>
+
+        </div>
+
+
+        <div class="interest-bottom">
+
+            <span id="interestCount">
+                0 selecionados
+            </span>
+
+
+            <button
+                id="finishInterests"
+                class="btn btn-primary"
+                type="button"
+                disabled
+            >
+                Continuar →
+            </button>
+
+        </div>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
